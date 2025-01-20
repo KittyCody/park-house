@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=park_house'
+      - 'POSTGRES_PASSWORD=no_secrets_among_devs'
+      - 'POSTGRES_USER=park_admin'
+    ports:
+      - '6432:5432'
