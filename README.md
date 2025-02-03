@@ -44,3 +44,9 @@ sh ./kc.sh export --dir /tmp/keycloak/ --users realm_file
 Take the exported file from the `/tmp/keycloak` directory replace the contents of the current import file with the new ones.
 
 Make sure the `authorizationSettings` are removed after export.
+
+## Database
+
+```shell
+mvn flyway:migrate
+```

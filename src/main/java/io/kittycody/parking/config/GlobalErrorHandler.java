@@ -19,29 +19,25 @@ public class GlobalErrorHandler {
     private final Logger logger = LogManager.getLogger(GlobalErrorHandler.class);
 
     @ExceptionHandler(AppError.class)
-    ResponseEntity<ProblemDetail> handleAppError(AppError err) {
+    ProblemDetail handleAppError(AppError err) {
 
         final var status = switch (err) {
-            case EntityNotPresent enp -> HttpStatus.NOT_FOUND;
-            case EntityAlreadyPresent eap -> HttpStatus.CONFLICT;
-            case InvalidOperation io -> HttpStatus.NOT_ACCEPTABLE;
+            case EntityNotPresent ignored -> HttpStatus.NOT_FOUND;
+            case EntityAlreadyPresent ignored -> HttpStatus.CONFLICT;
+            case InvalidOperation ignored -> HttpStatus.NOT_ACCEPTABLE;
 
             default -> throw new IllegalStateException("unexpected value: " + err);
         };
 
-        final var result = ProblemDetail.forStatusAndDetail(status, err.getCode());
-        return ResponseEntity.status(status).body(result);
+        return ProblemDetail.forStatusAndDetail(status, err.getCode());
     }
 
     @ExceptionHandler(Exception.class)
-    ResponseEntity<ProblemDetail> handleInternalError(Exception err) {
+    ProblemDetail handleInternalError(Exception err) {
 
         logger.error(err);
 
-        final var result = ProblemDetail
+        return ProblemDetail
                 .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "server:internal_error");
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(result);
     }
 }
