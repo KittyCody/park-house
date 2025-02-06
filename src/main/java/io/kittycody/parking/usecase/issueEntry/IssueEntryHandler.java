@@ -11,13 +11,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
-record EntryViewModel(String id, LocalDateTime entryTime) {}
-
 record IssueEntryCommand(UUID gateId) implements Command<Result<EntryViewModel>> {}
+
+record EntryViewModel(String id, LocalDateTime entryTime) {}
 
 @Component
 class IssueEntryHandler implements Command.Handler<IssueEntryCommand, Result<EntryViewModel>> {
@@ -53,7 +53,7 @@ class IssueEntryHandler implements Command.Handler<IssueEntryCommand, Result<Ent
         final var vehicles = tickets.countAllByTimeOfExitIsNull();
         final var availableSpaces = this.floors.sumCapacity();
 
-        if (vehicles >= availableSpaces) {
+        if (availableSpaces.isEmpty() || vehicles >= availableSpaces.get()) {
             return new NotEnoughSpaces();
         }
 
@@ -68,6 +68,6 @@ interface IssueEntryTicketRepo extends CrudRepository<Ticket, UUID> {
 
 @Repository
 interface IssueEntryFloorRepo extends CrudRepository<Floor, Integer> {
-    @Query(value = "SELECT sum(capacity) FROM floors", nativeQuery = true)
-    int sumCapacity();
+    @Query(value = "SELECT SUM(f.capacity) FROM Floor f")
+    Optional<Long> sumCapacity();
 }

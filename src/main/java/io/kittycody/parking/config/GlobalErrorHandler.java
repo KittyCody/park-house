@@ -4,19 +4,16 @@ import io.kittycody.parking.shared.error.AppError;
 import io.kittycody.parking.shared.error.EntityAlreadyPresent;
 import io.kittycody.parking.shared.error.EntityNotPresent;
 import io.kittycody.parking.shared.error.InvalidOperation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 
 @ControllerAdvice
 public class GlobalErrorHandler {
-
-    private final Logger logger = LogManager.getLogger(GlobalErrorHandler.class);
 
     @ExceptionHandler(AppError.class)
     ProblemDetail handleAppError(AppError err) {
@@ -32,10 +29,20 @@ public class GlobalErrorHandler {
         return ProblemDetail.forStatusAndDetail(status, err.getCode());
     }
 
-    @ExceptionHandler(Exception.class)
-    ProblemDetail handleInternalError(Exception err) {
+    @ExceptionHandler(NoResourceFoundException.class)
+    ProblemDetail handleNoResourceFoundException(NoResourceFoundException ignoredEx) {
 
-        logger.error(err);
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "resource:not_found");
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    ProblemDetail handleAuthorizationDeniedException(AuthorizationDeniedException ignoredEx) {
+
+        return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, "access:denied");
+    }
+
+    @ExceptionHandler(Exception.class)
+    ProblemDetail handleInternalError(Exception ignoredErr) {
 
         return ProblemDetail
                 .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "server:internal_error");

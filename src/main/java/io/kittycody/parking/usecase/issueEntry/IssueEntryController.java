@@ -26,6 +26,7 @@ class IssueEntryController extends BaseController {
     @PreAuthorize(HasAuthority.GATE_MACHINE)
     ResponseEntity<EntryViewModel> createEntryTicket(@AuthenticationPrincipal Jwt token) {
         final var gateMachineId = UUID.fromString(token.getSubject());
+
         final var cmd = new IssueEntryCommand(gateMachineId);
         final var result = this.pipeline.send(cmd);
 

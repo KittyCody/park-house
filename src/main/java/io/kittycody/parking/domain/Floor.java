@@ -12,4 +12,10 @@ public class Floor {
 
     @Column(nullable = false)
     private int capacity;
+
+    public Floor(int capacity) {
+        this.capacity = capacity;
+    }
+
+    protected Floor() {}
 }

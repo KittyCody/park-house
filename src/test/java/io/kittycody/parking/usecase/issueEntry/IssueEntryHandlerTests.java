@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -28,9 +29,9 @@ public class IssueEntryHandlerTests {
     }
 
     @Test
-    void whenNoAvailableSpaces_ReturnsNoSpacesError() {
+    void whenNoAvailableSpaces_returnsNoSpacesError() {
         // Arrange
-        when(floorsMock.sumCapacity()).thenReturn(10);
+        when(floorsMock.sumCapacity()).thenReturn(Optional.of(10L));
         when(ticketsMock.countAllByTimeOfExitIsNull()).thenReturn(10);
 
         final var gateId = UUID.randomUUID();
@@ -50,9 +51,9 @@ public class IssueEntryHandlerTests {
     }
 
     @Test
-    void whenOneAvailableSpace_ReturnsEntry() {
+    void whenOneAvailableSpace_returnsEntry() {
         // Arrange
-        when(floorsMock.sumCapacity()).thenReturn(10);
+        when(floorsMock.sumCapacity()).thenReturn(Optional.of(10L));
         when(ticketsMock.countAllByTimeOfExitIsNull()).thenReturn(9);
 
         final var gateId = UUID.randomUUID();
@@ -71,11 +72,13 @@ public class IssueEntryHandlerTests {
                 .as("Result should be success")
                 .isTrue();
 
-        assertThat(result.valueOrThrow().entryTime())
+        final var resultTicket = result.valueOrThrow();
+
+        assertThat(resultTicket.entryTime())
                 .as("Entry time should be the one provided")
                 .isEqualToIgnoringNanos(now);
 
-        assertThat(result.valueOrThrow().id())
+        assertThat(resultTicket.id())
                 .as("Entry id should be the one provided")
                 .isEqualTo(persistedTicket.getId().toString());
     }
