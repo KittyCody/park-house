@@ -11,6 +11,16 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+  postgres-test:
+    image: 'postgres:17-alpine'
+    container_name: postgres-test
+    environment:
+      - 'POSTGRES_DB=test_park_house'
+      - 'POSTGRES_USER=test_park_admin'
+      - 'POSTGRES_PASSWORD=no_secrets_among_devs'
+    ports:
+      - '7432:5432'
+
   postgres_keycloak:
     image: 'postgres:17-alpine'
     container_name: postgres_keycloak
