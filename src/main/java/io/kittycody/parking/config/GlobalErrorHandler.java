@@ -4,44 +4,47 @@ import io.kittycody.parking.shared.error.AppError;
 import io.kittycody.parking.shared.error.EntityAlreadyPresent;
 import io.kittycody.parking.shared.error.EntityNotPresent;
 import io.kittycody.parking.shared.error.InvalidOperation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 
 @ControllerAdvice
 public class GlobalErrorHandler {
 
-    private final Logger logger = LogManager.getLogger(GlobalErrorHandler.class);
-
     @ExceptionHandler(AppError.class)
-    ResponseEntity<ProblemDetail> handleAppError(AppError err) {
+    ProblemDetail handleAppError(AppError err) {
 
         final var status = switch (err) {
-            case EntityNotPresent enp -> HttpStatus.NOT_FOUND;
-            case EntityAlreadyPresent eap -> HttpStatus.CONFLICT;
-            case InvalidOperation io -> HttpStatus.NOT_ACCEPTABLE;
+            case EntityNotPresent ignored -> HttpStatus.NOT_FOUND;
+            case EntityAlreadyPresent ignored -> HttpStatus.CONFLICT;
+            case InvalidOperation ignored -> HttpStatus.NOT_ACCEPTABLE;
 
             default -> throw new IllegalStateException("unexpected value: " + err);
         };
 
-        final var result = ProblemDetail.forStatusAndDetail(status, err.getCode());
-        return ResponseEntity.status(status).body(result);
+        return ProblemDetail.forStatusAndDetail(status, err.getCode());
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    ProblemDetail handleNoResourceFoundException(NoResourceFoundException ignoredEx) {
+
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "resource:not_found");
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    ProblemDetail handleAuthorizationDeniedException(AuthorizationDeniedException ignoredEx) {
+
+        return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, "access:denied");
     }
 
     @ExceptionHandler(Exception.class)
-    ResponseEntity<ProblemDetail> handleInternalError(Exception err) {
+    ProblemDetail handleInternalError(Exception ignoredErr) {
 
-        logger.error(err);
-
-        final var result = ProblemDetail
+        return ProblemDetail
                 .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "server:internal_error");
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(result);
     }
 }

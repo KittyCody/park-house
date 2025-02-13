@@ -1,0 +1,1 @@
+INSERT INTO floors (capacity) VALUES (20);
