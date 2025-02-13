@@ -6,6 +6,7 @@ import io.kittycody.parking.domain.Ticket;
 import io.kittycody.parking.domain.error.NotEnoughSpaces;
 import io.kittycody.parking.shared.error.AppError;
 import io.kittycody.parking.shared.result.Result;
+import io.kittycody.parking.shared.timeService.TimeService;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -24,10 +25,12 @@ class IssueEntryHandler implements Command.Handler<IssueEntryCommand, Result<Ent
 
     private final IssueEntryTicketRepo tickets;
     private final IssueEntryFloorRepo floors;
+    private final TimeService timeService;
 
-    IssueEntryHandler(IssueEntryTicketRepo tickets, IssueEntryFloorRepo floors) {
+    IssueEntryHandler(IssueEntryTicketRepo tickets, IssueEntryFloorRepo floors, TimeService timeService) {
         this.tickets = tickets;
         this.floors = floors;
+        this.timeService = timeService;
     }
 
     @Override
@@ -37,7 +40,7 @@ class IssueEntryHandler implements Command.Handler<IssueEntryCommand, Result<Ent
             return Result.failure(err);
         }
 
-        final var parkingTicket = new Ticket(cmd.gateId(), LocalDateTime.now());
+        final var parkingTicket = new Ticket(cmd.gateId(), timeService.now());
         final var persistedTicket = this.tickets.save(parkingTicket);
 
         final var result = new EntryViewModel(

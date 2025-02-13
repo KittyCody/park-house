@@ -32,7 +32,7 @@ services:
       - postgres-keycloak-data:/var/lib/postgresql/data
 
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
+    image: quay.io/keycloak/keycloak:26.1
     container_name: keycloak
     command:
       - start-dev

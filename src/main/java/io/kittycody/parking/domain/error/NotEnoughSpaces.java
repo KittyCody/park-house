@@ -11,3 +11,4 @@ public class NotEnoughSpaces extends InvalidOperation {
         super("entry", "capacity", args);
     }
 }
+

@@ -23,7 +23,7 @@ class IssueEntryController extends BaseController {
     }
 
     @PostMapping("/v1/entries")
-    @PreAuthorize(HasAuthority.GATE_MACHINE)
+    @PreAuthorize(HasAuthority.GATE_MACHINE_ROLE)
     ResponseEntity<EntryViewModel> createEntryTicket(@AuthenticationPrincipal Jwt token) {
         final var gateMachineId = UUID.fromString(token.getSubject());
 

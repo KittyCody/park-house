@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -64,7 +65,7 @@ public class IssueEntryTestsIT {
 
         final var jwt = AuthUtil.generateJwt(gateMachineId, "gate_machine");
 
-        final var floor = new Floor(10);
+        final var floor = new Floor(10, LocalDateTime.now());
         floorsRepo.save(floor);
 
         mockMvc.perform(

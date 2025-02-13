@@ -1,6 +1,7 @@
 package io.kittycody.parking.usecase.issueEntry;
 
 import io.kittycody.parking.domain.Ticket;
+import io.kittycody.parking.shared.timeService.TimeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,8 +25,9 @@ public class IssueEntryHandlerTests {
     void setUp() {
         ticketsMock = Mockito.mock(IssueEntryTicketRepo.class);
         floorsMock = Mockito.mock(IssueEntryFloorRepo.class);
+        TimeService timeServiceMock = Mockito.mock(TimeService.class);
 
-        handler = new IssueEntryHandler(ticketsMock, floorsMock);
+        handler = new IssueEntryHandler(ticketsMock, floorsMock, timeServiceMock);
     }
 
     @Test
@@ -60,6 +62,7 @@ public class IssueEntryHandlerTests {
         final var now = LocalDateTime.now();
         final var persistedTicket = new Ticket(gateId, now);
 
+        assertThat (persistedTicket.getId()).isNotNull();
         when(ticketsMock.save(any(Ticket.class))).thenReturn(persistedTicket);
 
         final var cmd = new IssueEntryCommand(gateId);
