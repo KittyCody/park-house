@@ -7,6 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @SpringBootTest
+@ActiveProfiles("test")
 class ParkingApplicationTests {
 
 	@Test

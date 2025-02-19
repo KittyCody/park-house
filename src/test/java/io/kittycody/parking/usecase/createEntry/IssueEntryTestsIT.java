@@ -1,4 +1,4 @@
-package io.kittycody.parking.usecase.issueEntry;
+package io.kittycody.parking.usecase.createEntry;
 
 import io.kittycody.parking.AuthUtil;
 import io.kittycody.parking.domain.Floor;
@@ -9,10 +9,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,10 +24,10 @@ public class IssueEntryTestsIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private IssueEntryTicketRepo ticketsRepo;
+    private CreateEntryTicketRepo ticketsRepo;
 
     @Autowired
-    private IssueEntryFloorRepo floorsRepo;
+    private CreateEntryFloorRepo floorsRepo;
 
     @Test
     void whenNoAuthentication_shouldReturn401() throws Exception {

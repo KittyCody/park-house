@@ -1,11 +1,10 @@
-package io.kittycody.parking.usecase.issueEntry;
+package io.kittycody.parking.usecase.createEntry;
 
 import io.kittycody.parking.domain.Ticket;
 import io.kittycody.parking.shared.timeService.TimeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,18 +15,19 @@ import static org.mockito.Mockito.when;
 
 public class IssueEntryHandlerTests {
 
-    private IssueEntryTicketRepo ticketsMock;
-    private IssueEntryFloorRepo floorsMock;
+    private CreateEntryTicketRepo ticketsMock;
+    private CreateEntryFloorRepo floorsMock;
 
-    private IssueEntryHandler handler;
+    private CreateEntryHandler handler;
 
     @BeforeEach
     void setUp() {
-        ticketsMock = Mockito.mock(IssueEntryTicketRepo.class);
-        floorsMock = Mockito.mock(IssueEntryFloorRepo.class);
+        ticketsMock = Mockito.mock(CreateEntryTicketRepo.class);
+        floorsMock = Mockito.mock(CreateEntryFloorRepo.class);
         TimeService timeServiceMock = Mockito.mock(TimeService.class);
+        CreateEntryParkingSettingsRepo parkingSettingsRepo = Mockito.mock(CreateEntryParkingSettingsRepo.class);
 
-        handler = new IssueEntryHandler(ticketsMock, floorsMock, timeServiceMock);
+        handler = new CreateEntryHandler(ticketsMock, floorsMock, timeServiceMock,parkingSettingsRepo);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class IssueEntryHandlerTests {
         when(ticketsMock.countAllByTimeOfExitIsNull()).thenReturn(10);
 
         final var gateId = UUID.randomUUID();
-        final var cmd = new IssueEntryCommand(gateId);
+        final var cmd = new CreateEntryCommand(gateId);
 
         // Act
         final var result = handler.handle(cmd);
@@ -65,7 +65,7 @@ public class IssueEntryHandlerTests {
         assertThat (persistedTicket.getId()).isNotNull();
         when(ticketsMock.save(any(Ticket.class))).thenReturn(persistedTicket);
 
-        final var cmd = new IssueEntryCommand(gateId);
+        final var cmd = new CreateEntryCommand(gateId);
 
         // Act
         final var result = handler.handle(cmd);
