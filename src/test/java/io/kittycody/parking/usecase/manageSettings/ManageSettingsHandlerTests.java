@@ -35,7 +35,7 @@ public class ManageSettingsHandlerTests {
 
        assertThat(err.getCode())
                 .as("Error should contain 'update'")
-                .contains("bad_request:invalid_operational_hours");
+                .contains("parking_settings:invalid_operational_hours");
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ManageSettingsHandlerTests {
 
         assertThat(err.getCode())
                 .as("Error should contain 'invalid_operational_hours'")
-                .contains("bad_request:invalid_operational_hours");
+                .contains("parking_settings:invalid_operational_hours");
 
     }
 

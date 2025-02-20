@@ -45,8 +45,8 @@ public class GlobalErrorHandler {
                 .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "server:internal_error");
     }
 
-    @ExceptionHandler(BadRequest.class)
-    ProblemDetail handleBadRequest(BadRequest ignoredEx) {
+    @ExceptionHandler(InvalidInputData.class)
+    ProblemDetail handleBadRequest(InvalidInputData ignoredEx) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "bad_request");
     }
 }
