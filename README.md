@@ -1,3 +1,5 @@
+![tests workflow](https://github.com/KittyCody/park-house/actions/workflows/tests.yml/badge.svg)
+
 # Park House
 Parking house management software developed using Spring Boot.
 
