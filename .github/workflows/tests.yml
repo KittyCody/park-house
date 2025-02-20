@@ -33,4 +33,4 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: Run tests
-      run: SPRING_PROFILES_ACTIVE=test mvn test
+      run: mvn verify
