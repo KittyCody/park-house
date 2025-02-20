@@ -35,7 +35,7 @@ public class ManageSettingsHandlerTests {
 
        assertThat(err.getCode())
                 .as("Error should contain 'update'")
-                .contains("invalid_hours");
+                .contains("bad_request:invalid_operational_hours");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class ManageSettingsHandlerTests {
         final var cmd = new ManageSettingsCommand(0,24);
         final var err = handler.handle(cmd);
 
-        final var mockedSettings = new ParkingSettings(0, 23);
+        final var mockedSettings = new ParkingSettings(0, 24);
         when(settingsRepository.save(any(ParkingSettings.class)))
                 .thenReturn(mockedSettings);
 
@@ -54,16 +54,14 @@ public class ManageSettingsHandlerTests {
 
     @Test
     void updateOperationalHours_WhenCloseHourIsInvalid_returnsInvalidHoursError() {
-        final var cmd = new ManageSettingsCommand(8,-1);
+
+        final var cmd = new ManageSettingsCommand(8, -1);
+
         final var err = handler.handle(cmd);
 
-        final var mockedSettings = new ParkingSettings(8, 23);
-        when(settingsRepository.save(any(ParkingSettings.class)))
-                .thenReturn(mockedSettings);
-
         assertThat(err.getCode())
-                .as("Error should contain 'update'")
-                .contains("invalid_hours");
+                .as("Error should contain 'invalid_operational_hours'")
+                .contains("bad_request:invalid_operational_hours");
 
     }
 
@@ -72,7 +70,7 @@ public class ManageSettingsHandlerTests {
         final var cmd = new ManageSettingsCommand(8,24);
         final var err = handler.handle(cmd);
 
-        final var mockedSettings = new ParkingSettings(8, 23);
+        final var mockedSettings = new ParkingSettings(8, 24);
         when(settingsRepository.save(any(ParkingSettings.class)))
         .thenReturn(mockedSettings);
 

@@ -45,13 +45,15 @@ public class ManageSettingsTestsIT {
     @Transactional
     void updateOperationalHours_whenAuthenticatedWithAdminRoleAndValidHours_shouldReturn204() throws Exception {
         final var jwt = AuthUtil.generateJwt("adminId", "parking_admin");
+
         mockMvc.perform(
-                put("/v1/settings/current")
-                .with(jwt)
-                .contentType("application/json")
-                .content("{\"openHour\": 8, \"closeHour\": 18}")
-        )
-                .andExpect(status().isNoContent());
+                        put("/v1/settings/current")
+                                .with(jwt)
+                                .contentType("application/json")
+                                .content("{\"openHour\": 8, \"closeHour\": 18}")
+                )
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
 
         var settings = settingsRepo.findTopByOrderByIdDesc().orElseThrow();
         assertThat(settings.openHour()).isEqualTo(8);
@@ -68,38 +70,6 @@ public class ManageSettingsTestsIT {
                 .contentType("application/json")
                 .content("{\"openHour\": 18, \"closeHour\": 8}")
         )
-                .andExpect(status().isNotAcceptable());
-    }
-
-    @Test
-    @Transactional
-    void updateOperationalHours_whenValidSettingsAreUpdated_shouldBePersisted() throws Exception {
-        final var jwt = AuthUtil.generateJwt("adminId", "parking_admin");
-
-        mockMvc.perform(
-                put("/v1/settings/current")
-                .with(jwt)
-                .contentType("application/json")
-                .content("{\"openHour\": 7, \"closeHour\": 22}")
-        )
-                .andExpect(status().isNoContent());
-
-                var settings = settingsRepo.findTopByOrderByIdDesc().orElseThrow();
-                assertThat(settings.openHour()).isEqualTo(7);
-                assertThat(settings.closeHour()).isEqualTo(22);
-    }
-
-    @Test
-    void updateOperationalHours_whenValidRequests_shouldReturn204WithoutBody() throws Exception {
-        final var jwt = AuthUtil.generateJwt("adminId", "parking_admin");
-
-        mockMvc.perform(
-                put("/v1/settings/current")
-                .with(jwt)
-                .contentType("application/json")
-                .content("{\"openHour\": 7, \"closeHour\": 22}")
-        )
-                .andExpect(status().isNoContent())
-                .andExpect(content().string(""));
+                .andExpect(status().isBadRequest());
     }
 }

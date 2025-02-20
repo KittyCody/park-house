@@ -1,9 +1,6 @@
 package io.kittycody.parking.config;
 
-import io.kittycody.parking.shared.error.AppError;
-import io.kittycody.parking.shared.error.EntityAlreadyPresent;
-import io.kittycody.parking.shared.error.EntityNotPresent;
-import io.kittycody.parking.shared.error.InvalidOperation;
+import io.kittycody.parking.shared.error.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -46,5 +43,10 @@ public class GlobalErrorHandler {
 
         return ProblemDetail
                 .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "server:internal_error");
+    }
+
+    @ExceptionHandler(BadRequest.class)
+    ProblemDetail handleBadRequest(BadRequest ignoredEx) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "bad_request");
     }
 }

@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 @Entity
 @Table(name = "parking_settings")
 public class ParkingSettings {
@@ -22,6 +24,11 @@ public class ParkingSettings {
     protected ParkingSettings() {}
     
     public ParkingSettings(int openHour, int closeHour) {
+
+        if(!isValidOperationalHours(openHour, closeHour)) {
+            throw new InvalidOperationalHours();
+        }
+
         this.openHour = openHour;
         this.closeHour = closeHour;
     }
@@ -60,7 +67,4 @@ public class ParkingSettings {
     public int closeHour() {
         return closeHour;
     }
-
-
-
 }

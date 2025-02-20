@@ -1,12 +1,12 @@
 package io.kittycody.parking.domain.error;
 
-import io.kittycody.parking.shared.error.InvalidOperation;
-
 import java.util.Map;
+import io.kittycody.parking.shared.error.BadRequest;
 
-public class InvalidOperationalHours extends InvalidOperation {
+public class InvalidOperationalHours extends BadRequest {
     @SafeVarargs
     public InvalidOperationalHours(Map.Entry<String, Object>... args) {
-        super("settings_update", "invalid_hours", args);
+        super("bad_request", "invalid_operational_hours", args);
     }
 }
+

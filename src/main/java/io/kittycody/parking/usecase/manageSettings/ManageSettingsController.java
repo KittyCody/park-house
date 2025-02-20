@@ -5,8 +5,6 @@ import io.kittycody.parking.domain.ParkingSettings;
 import io.kittycody.parking.domain.error.InvalidOperationalHours;
 import io.kittycody.parking.shared.auth.HasAuthority;
 import io.kittycody.parking.shared.controller.BaseController;
-import io.kittycody.parking.shared.result.Result;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,8 +26,7 @@ public class ManageSettingsController extends BaseController {
     @PreAuthorize(HasAuthority.ADMIN_ROLE)
     ResponseEntity<Void> updateParkingSettings(@RequestBody ManageSettingsRequest req) {
         if (!ParkingSettings.isValidOperationalHours(req.openHour, req.closeHour)) {
-            final var err = new InvalidOperationalHours();
-            return this.toResponse(HttpStatus.BAD_REQUEST, Result.failure(err));
+            throw new InvalidOperationalHours();
         }
 
         final var command = new ManageSettingsCommand(req.openHour, req.closeHour);

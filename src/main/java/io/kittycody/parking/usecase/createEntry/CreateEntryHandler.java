@@ -28,28 +28,22 @@ class CreateEntryHandler implements Command.Handler<CreateEntryCommand, Result<E
     private final CreateEntryTicketRepo tickets;
     private final CreateEntryFloorRepo floors;
     private final TimeService timeService;
-    private final CreateEntryParkingSettingsRepo parkingSettingsRepo;
+    private final CreateEntryParkingSettingsRepo parkingSettings;
 
-    CreateEntryHandler(CreateEntryTicketRepo tickets, CreateEntryFloorRepo floors, TimeService timeService, CreateEntryParkingSettingsRepo parkingSettingsRepo) {
+    CreateEntryHandler(CreateEntryTicketRepo tickets, CreateEntryFloorRepo floors, TimeService timeService, CreateEntryParkingSettingsRepo parkingSettings) {
         this.tickets = tickets;
         this.floors = floors;
         this.timeService = timeService;
-        this.parkingSettingsRepo = parkingSettingsRepo;
+        this.parkingSettings = parkingSettings;
     }
 
     @Override
     public Result<EntryViewModel> handle(CreateEntryCommand cmd) {
 
-        final var operationalHoursErr = this.validateOperationalHours();
-        if (operationalHoursErr != null) {
-            return Result.failure(operationalHoursErr);
+        AppError validateErr = this.validateEntry();
+        if (validateErr != null) {
+            return Result.failure(validateErr);
         }
-
-        final var capacityErr = this.validateCapacity();
-        if (capacityErr != null) {
-            return Result.failure(capacityErr);
-        }
-
         final var parkingTicket = new Ticket(cmd.gateId(), timeService.now());
         final var persistedTicket = this.tickets.save(parkingTicket);
 
@@ -75,7 +69,7 @@ class CreateEntryHandler implements Command.Handler<CreateEntryCommand, Result<E
 
     @Nullable
     private AppError validateOperationalHours() {
-        Optional<ParkingSettings> settingsOpt = this.parkingSettingsRepo.findTopByOrderByIdDesc();
+        Optional<ParkingSettings> settingsOpt = this.parkingSettings.findTopByOrderByIdDesc();
         if (settingsOpt.isEmpty()) {
             return null;
         }
@@ -90,6 +84,22 @@ class CreateEntryHandler implements Command.Handler<CreateEntryCommand, Result<E
 
         return null;
     }
+
+    @Nullable
+    private AppError validateEntry() {
+        AppError operationalHoursErr = validateOperationalHours();
+        if (operationalHoursErr != null) {
+            return operationalHoursErr;
+        }
+
+        AppError capacityErr = validateCapacity();
+        if (capacityErr != null) {
+            return capacityErr;
+        }
+
+        return null;
+    }
+
 }
     @Repository
     interface CreateEntryTicketRepo extends CrudRepository<Ticket, UUID> {
