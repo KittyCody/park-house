@@ -33,6 +33,6 @@ public class ManageSettingsController extends BaseController {
 
         final var err = this.pipeline.send(command);
 
-        return this.noContentResponse(err);
+        return this.toNoContentOrThrow(err);
     }
 }

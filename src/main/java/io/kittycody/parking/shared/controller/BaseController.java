@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 public abstract class BaseController {
 
-    protected <T> ResponseEntity<T> toResponse(HttpStatus status, Result<T> result) {
+    protected <T> ResponseEntity<T> toResponseOrThrow(HttpStatus status, Result<T> result) {
         if (result.isFailure()) {
             throw result.errorOrThrow();
         }
@@ -16,7 +16,7 @@ public abstract class BaseController {
         return ResponseEntity.status(status).body(result.valueOrThrow());
     }
 
-    protected ResponseEntity<Void> noContentResponse(@Nullable AppError err) {
+    protected ResponseEntity<Void> toNoContentOrThrow(@Nullable AppError err) {
         if (err != null) {
             throw err;
         }

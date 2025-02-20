@@ -40,10 +40,11 @@ class CreateEntryHandler implements Command.Handler<CreateEntryCommand, Result<E
     @Override
     public Result<EntryViewModel> handle(CreateEntryCommand cmd) {
 
-        AppError validateErr = this.validateEntry();
+        final var validateErr = this.validateEntry();
         if (validateErr != null) {
             return Result.failure(validateErr);
         }
+
         final var parkingTicket = new Ticket(cmd.gateId(), timeService.now());
         final var persistedTicket = this.tickets.save(parkingTicket);
 
@@ -53,6 +54,16 @@ class CreateEntryHandler implements Command.Handler<CreateEntryCommand, Result<E
         );
 
         return Result.success(result);
+    }
+
+    @Nullable
+    private AppError validateEntry() {
+        final var operationalHoursErr = validateOperationalHours();
+        if (operationalHoursErr != null) {
+            return operationalHoursErr;
+        }
+
+        return validateCapacity();
     }
 
     @Nullable
@@ -84,22 +95,6 @@ class CreateEntryHandler implements Command.Handler<CreateEntryCommand, Result<E
 
         return null;
     }
-
-    @Nullable
-    private AppError validateEntry() {
-        AppError operationalHoursErr = validateOperationalHours();
-        if (operationalHoursErr != null) {
-            return operationalHoursErr;
-        }
-
-        AppError capacityErr = validateCapacity();
-        if (capacityErr != null) {
-            return capacityErr;
-        }
-
-        return null;
-    }
-
 }
     @Repository
     interface CreateEntryTicketRepo extends CrudRepository<Ticket, UUID> {

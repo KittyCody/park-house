@@ -30,6 +30,6 @@ class CreateEntryController extends BaseController {
         final var cmd = new CreateEntryCommand(gateMachineId);
         final var result = this.pipeline.send(cmd);
 
-        return this.toResponse(HttpStatus.OK, result);
+        return this.toResponseOrThrow(HttpStatus.OK, result);
     }
 }
