@@ -8,5 +8,4 @@ public abstract class InvalidOperation extends AppError {
     protected InvalidOperation(String operationName, String reason, Map.Entry<String, Object>... args) {
         super("%s:%s".formatted(operationName, reason), args);
     }
-
 }

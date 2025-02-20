@@ -1,4 +1,4 @@
-package io.kittycody.parking.usecase.issueEntry;
+package io.kittycody.parking.usecase.createEntry;
 
 import an.awesome.pipelinr.Pipeline;
 import io.kittycody.parking.shared.auth.HasAuthority;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-class IssueEntryController extends BaseController {
+class CreateEntryController extends BaseController {
 
     private final Pipeline pipeline;
 
-    IssueEntryController(Pipeline pipeline) {
+    CreateEntryController(Pipeline pipeline) {
         this.pipeline = pipeline;
     }
 
@@ -27,9 +27,9 @@ class IssueEntryController extends BaseController {
     ResponseEntity<EntryViewModel> createEntryTicket(@AuthenticationPrincipal Jwt token) {
         final var gateMachineId = UUID.fromString(token.getSubject());
 
-        final var cmd = new IssueEntryCommand(gateMachineId);
+        final var cmd = new CreateEntryCommand(gateMachineId);
         final var result = this.pipeline.send(cmd);
 
-        return this.toResponse(HttpStatus.OK, result);
+        return this.toResponseOrThrow(HttpStatus.OK, result);
     }
 }

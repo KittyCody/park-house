@@ -6,6 +6,14 @@ CREATE TABLE floors
     CONSTRAINT pk_floors PRIMARY KEY (id)
 );
 
+CREATE TABLE parking_settings
+(
+    id         INTEGER NOT NULL,
+    open_hour  INTEGER NOT NULL,
+    close_hour INTEGER NOT NULL,
+    CONSTRAINT pk_parking_settings PRIMARY KEY (id)
+);
+
 CREATE TABLE tickets
 (
     id            UUID                        NOT NULL,
