@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ManageSettingsController extends BaseController {
+class ManageSettingsController extends BaseController {
 
-    private record ManageSettingsRequest(int openHour, int closeHour) {};
+    private record ManageSettingsRequest(int openHour, int closeHour) {
+    }
 
     private final Pipeline pipeline;
 
@@ -29,9 +30,9 @@ public class ManageSettingsController extends BaseController {
             throw new InvalidOperationalHours();
         }
 
-        final var command = new ManageSettingsCommand(req.openHour, req.closeHour);
+        final var cmd = new ManageSettingsCommand(req.openHour, req.closeHour);
 
-        final var err = this.pipeline.send(command);
+        final var err = this.pipeline.send(cmd);
 
         return this.toNoContentOrThrow(err);
     }

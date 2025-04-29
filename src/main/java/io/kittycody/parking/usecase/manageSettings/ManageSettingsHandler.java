@@ -6,9 +6,11 @@ import io.kittycody.parking.shared.error.AppError;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
-record ManageSettingsCommand(int OpenHour, int CloseHour) implements Command<AppError> {}
+record ManageSettingsCommand(int OpenHour, int CloseHour) implements Command<AppError> {
+}
 
 @Component
 class ManageSettingsHandler implements Command.Handler<ManageSettingsCommand, AppError> {
