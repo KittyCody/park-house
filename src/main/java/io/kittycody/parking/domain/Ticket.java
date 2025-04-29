@@ -1,6 +1,12 @@
 package io.kittycody.parking.domain;
 
-import jakarta.persistence.*;
+import io.kittycody.parking.domain.error.AlreadyExited;
+import io.kittycody.parking.domain.error.PendingPayment;
+import io.kittycody.parking.shared.error.AppError;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -22,7 +28,10 @@ public class Ticket {
 
     private LocalDateTime timeOfExit;
 
-    protected Ticket() {}
+    private LocalDateTime timeOfPayment;
+
+    protected Ticket() {
+    }
 
     public Ticket(UUID entryGateId, LocalDateTime now) {
         this.id = UUID.randomUUID();
@@ -49,4 +58,33 @@ public class Ticket {
     public LocalDateTime getTimeOfExit() {
         return timeOfExit;
     }
+
+    private boolean isPendingPayment() {
+        return timeOfPayment == null;
+    }
+
+    private boolean isAlreadyExited() {
+        return timeOfExit != null;
+    }
+
+    public AppError exit(UUID exitGateId, LocalDateTime now) {
+
+        if (isPendingPayment()) {
+            return new PendingPayment();
+        }
+
+        if (isAlreadyExited()) {
+            return new AlreadyExited();
+        }
+
+        this.exitGateId = exitGateId;
+        this.timeOfExit = now;
+
+        return null;
+    }
+
+    public void pay(LocalDateTime timeOfPayment) {
+        this.timeOfPayment = timeOfPayment;
+    }
+
 }

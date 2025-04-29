@@ -19,6 +19,7 @@ public class GlobalErrorHandler {
             case EntityNotPresent ignored -> HttpStatus.NOT_FOUND;
             case EntityAlreadyPresent ignored -> HttpStatus.CONFLICT;
             case InvalidOperation ignored -> HttpStatus.NOT_ACCEPTABLE;
+            case InvalidInputData ignored -> HttpStatus.BAD_REQUEST;
 
             default -> throw new IllegalStateException("unexpected value: " + err);
         };
