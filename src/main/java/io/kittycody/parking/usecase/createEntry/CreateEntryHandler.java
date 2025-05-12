@@ -8,7 +8,7 @@ import io.kittycody.parking.domain.error.InvalidOperationalHours;
 import io.kittycody.parking.domain.error.NotEnoughSpaces;
 import io.kittycody.parking.shared.error.AppError;
 import io.kittycody.parking.shared.result.Result;
-import io.kittycody.parking.shared.timeService.TimeService;
+import io.kittycody.parking.shared.service.TimeService;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

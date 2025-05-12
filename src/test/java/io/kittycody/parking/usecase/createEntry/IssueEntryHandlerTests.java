@@ -1,7 +1,7 @@
 package io.kittycody.parking.usecase.createEntry;
 
 import io.kittycody.parking.domain.Ticket;
-import io.kittycody.parking.shared.timeService.TimeService;
+import io.kittycody.parking.shared.service.TimeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

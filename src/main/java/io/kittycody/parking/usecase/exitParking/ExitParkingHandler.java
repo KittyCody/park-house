@@ -4,7 +4,7 @@ import an.awesome.pipelinr.Command;
 import io.kittycody.parking.domain.Ticket;
 import io.kittycody.parking.domain.error.UnknownTicket;
 import io.kittycody.parking.shared.error.AppError;
-import io.kittycody.parking.shared.timeService.TimeService;
+import io.kittycody.parking.shared.service.TimeService;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
