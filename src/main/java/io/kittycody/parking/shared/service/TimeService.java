@@ -1,4 +1,4 @@
-package io.kittycody.parking.shared.timeService;
+package io.kittycody.parking.shared.service;
 
 import org.springframework.stereotype.Service;
 

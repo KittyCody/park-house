@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class Floor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
 
     @Column(nullable = false)

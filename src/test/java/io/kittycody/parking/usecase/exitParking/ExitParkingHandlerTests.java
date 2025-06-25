@@ -4,7 +4,7 @@ import io.kittycody.parking.domain.error.AlreadyExited;
 import io.kittycody.parking.domain.error.PendingPayment;
 import io.kittycody.parking.domain.error.UnknownTicket;
 import io.kittycody.parking.shared.error.AppError;
-import io.kittycody.parking.shared.timeService.TimeService;
+import io.kittycody.parking.shared.service.TimeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
