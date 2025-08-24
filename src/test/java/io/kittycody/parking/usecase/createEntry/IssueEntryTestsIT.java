@@ -41,7 +41,7 @@ public class IssueEntryTestsIT {
         mockMvc.perform(
                 post("/v1/entries")
                         .with(jwt)
-                ).andExpect(status().isForbidden());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
@@ -52,8 +52,8 @@ public class IssueEntryTestsIT {
         final var jwt = AuthUtil.generateJwt(gateMachineId, "gate_machine");
 
         mockMvc.perform(
-                post("/v1/entries")
-                        .with(jwt)
+                        post("/v1/entries")
+                                .with(jwt)
                 )
                 .andExpect(status().isNotAcceptable());
     }

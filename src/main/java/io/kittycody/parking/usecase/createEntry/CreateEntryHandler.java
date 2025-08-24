@@ -8,7 +8,7 @@ import io.kittycody.parking.domain.error.InvalidOperationalHours;
 import io.kittycody.parking.domain.error.NotEnoughSpaces;
 import io.kittycody.parking.shared.error.AppError;
 import io.kittycody.parking.shared.result.Result;
-import io.kittycody.parking.shared.timeService.TimeService;
+import io.kittycody.parking.shared.service.TimeService;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -96,18 +96,18 @@ class CreateEntryHandler implements Command.Handler<CreateEntryCommand, Result<E
         return null;
     }
 }
-    @Repository
-    interface CreateEntryTicketRepo extends CrudRepository<Ticket, UUID> {
-        int countAllByTimeOfExitIsNull();
-    }
+@Repository
+interface CreateEntryTicketRepo extends CrudRepository<Ticket, UUID> {
+    int countAllByTimeOfExitIsNull();
+}
 
-    @Repository
-    interface CreateEntryFloorRepo extends CrudRepository<Floor, Integer> {
-        @Query(value = "SELECT SUM(f.capacity) FROM Floor f")
-        Optional<Long> sumCapacity();
-    }
+@Repository
+interface CreateEntryFloorRepo extends CrudRepository<Floor, Integer> {
+    @Query(value = "SELECT SUM(f.capacity) FROM Floor f")
+    Optional<Long> sumCapacity();
+}
 
-    @Repository
-    interface CreateEntryParkingSettingsRepo extends CrudRepository<ParkingSettings, Long> {
-        Optional<ParkingSettings> findTopByOrderByIdDesc();
-    }
+@Repository
+interface CreateEntryParkingSettingsRepo extends CrudRepository<ParkingSettings, Long> {
+    Optional<ParkingSettings> findTopByOrderByIdDesc();
+}

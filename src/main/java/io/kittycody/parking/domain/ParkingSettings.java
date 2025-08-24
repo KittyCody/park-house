@@ -2,12 +2,10 @@ package io.kittycody.parking.domain;
 
 import io.kittycody.parking.domain.error.InvalidOperationalHours;
 import io.kittycody.parking.shared.error.AppError;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
 
 @Entity
 @Table(name = "parking_settings")
@@ -16,33 +14,28 @@ public class ParkingSettings {
     private static final int MinOperationalHours = 1;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
 
     private int openHour;
     private int closeHour;
 
-    protected ParkingSettings() {}
-    
-    public ParkingSettings(int openHour, int closeHour) {
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private CostPolicy costPolicy;
 
-        if(!isValidOperationalHours(openHour, closeHour)) {
+    protected ParkingSettings() {
+    }
+
+    public ParkingSettings(int openHour, int closeHour, CostPolicy costPolicy) {
+
+        if (!isValidOperationalHours(openHour, closeHour)) {
             throw new InvalidOperationalHours();
         }
 
         this.openHour = openHour;
         this.closeHour = closeHour;
-    }
-
-    @Nullable
-    public AppError updateOperationalHours(int openHour, int closeHour) {
-        if (!isValidOperationalHours(openHour, closeHour)) {
-            return new InvalidOperationalHours();
-        }
-
-        this.openHour = openHour;
-        this.closeHour = closeHour;
-
-        return null;
+        this.costPolicy = costPolicy;
     }
 
     public static boolean isValidOperationalHours(int openHour, int closeHour) {
@@ -57,7 +50,19 @@ public class ParkingSettings {
     }
 
     public static ParkingSettings createDefault() {
-        return new ParkingSettings(8, 22);
+        return new ParkingSettings(8, 22, CostPolicy.createDefault());
+    }
+
+    @Nullable
+    public AppError updateOperationalHours(int openHour, int closeHour) {
+        if (!isValidOperationalHours(openHour, closeHour)) {
+            return new InvalidOperationalHours();
+        }
+
+        this.openHour = openHour;
+        this.closeHour = closeHour;
+
+        return null;
     }
 
     public int openHour() {
@@ -66,5 +71,9 @@ public class ParkingSettings {
 
     public int closeHour() {
         return closeHour;
+    }
+
+    public CostPolicy getCostPolicy() {
+        return costPolicy;
     }
 }

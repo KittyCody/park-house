@@ -31,14 +31,14 @@ public class ManageSettingsTestsIT {
 
     @Test
     void updateOperationalHours_whenAuthenticatedWithOtherRole_shouldReturn403() throws Exception {
-            final var jwt = AuthUtil.generateJwt("userId", "user");
-            mockMvc.perform(
-                    put("/v1/settings/current")
-                            .with(jwt)
-                            .contentType("application/json")
-                            .content("{\"openHour\": 8, \"closeHour\": 18}")
-            )
-                    .andExpect(status().isForbidden());
+        final var jwt = AuthUtil.generateJwt("userId", "user");
+        mockMvc.perform(
+                        put("/v1/settings/current")
+                                .with(jwt)
+                                .contentType("application/json")
+                                .content("{\"openHour\": 8, \"closeHour\": 18}")
+                )
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -65,11 +65,11 @@ public class ManageSettingsTestsIT {
         final var jwt = AuthUtil.generateJwt("adminId", "parking_admin");
 
         mockMvc.perform(
-                put("/v1/settings/current")
-                .with(jwt)
-                .contentType("application/json")
-                .content("{\"openHour\": 18, \"closeHour\": 8}")
-        )
+                        put("/v1/settings/current")
+                                .with(jwt)
+                                .contentType("application/json")
+                                .content("{\"openHour\": 18, \"closeHour\": 8}")
+                )
                 .andExpect(status().isBadRequest());
     }
 }
